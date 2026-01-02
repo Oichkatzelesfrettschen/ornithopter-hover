@@ -1,7 +1,11 @@
 #ifndef QUATERNION_H
 #define QUATERNION_H
 
-#include <math.h>
+#include <cmath>
+
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
 
 /**
  * @brief Quaternion class for rotation representation
@@ -26,8 +30,8 @@ public:
      */
     static Quaternion fromAxisAngle(float angle, float axis_x, float axis_y, float axis_z) {
         float half_angle = angle * 0.5f;
-        float s = sin(half_angle);
-        return Quaternion(cos(half_angle), axis_x * s, axis_y * s, axis_z * s);
+        float s = std::sin(half_angle);
+        return Quaternion(std::cos(half_angle), axis_x * s, axis_y * s, axis_z * s);
     }
     
     /**
@@ -37,12 +41,12 @@ public:
      * @param yaw Yaw angle in radians
      */
     static Quaternion fromEuler(float roll, float pitch, float yaw) {
-        float cr = cos(roll * 0.5f);
-        float sr = sin(roll * 0.5f);
-        float cp = cos(pitch * 0.5f);
-        float sp = sin(pitch * 0.5f);
-        float cy = cos(yaw * 0.5f);
-        float sy = sin(yaw * 0.5f);
+        float cr = std::cos(roll * 0.5f);
+        float sr = std::sin(roll * 0.5f);
+        float cp = std::cos(pitch * 0.5f);
+        float sp = std::sin(pitch * 0.5f);
+        float cy = std::cos(yaw * 0.5f);
+        float sy = std::sin(yaw * 0.5f);
         
         return Quaternion(
             cr * cp * cy + sr * sp * sy,
@@ -77,7 +81,7 @@ public:
      * @brief Compute quaternion magnitude
      */
     float norm() const {
-        return sqrt(w * w + x * x + y * y + z * z);
+        return std::sqrt(w * w + x * x + y * y + z * z);
     }
     
     /**
@@ -85,7 +89,7 @@ public:
      * CRITICAL: Must be called after integration to prevent drift
      */
     void normalize() {
-        float n = norm();
+        float n = std::sqrt(w * w + x * x + y * y + z * z);
         if (n > 1e-6f) {  // Avoid division by zero
             float inv_n = 1.0f / n;
             w *= inv_n;
@@ -158,19 +162,19 @@ public:
         // Roll (x-axis rotation)
         float sinr_cosp = 2.0f * (w * x + y * z);
         float cosr_cosp = 1.0f - 2.0f * (x * x + y * y);
-        roll = atan2(sinr_cosp, cosr_cosp);
+        roll = std::atan2(sinr_cosp, cosr_cosp);
         
         // Pitch (y-axis rotation)
         float sinp = 2.0f * (w * y - z * x);
-        if (fabs(sinp) >= 1.0f)
-            pitch = copysign(M_PI / 2.0f, sinp); // Use 90 degrees if out of range
+        if (std::fabs(sinp) >= 1.0f)
+            pitch = std::copysign(M_PI / 2.0f, sinp); // Use 90 degrees if out of range
         else
-            pitch = asin(sinp);
+            pitch = std::asin(sinp);
         
         // Yaw (z-axis rotation)
         float siny_cosp = 2.0f * (w * z + x * y);
         float cosy_cosp = 1.0f - 2.0f * (y * y + z * z);
-        yaw = atan2(siny_cosp, cosy_cosp);
+        yaw = std::atan2(siny_cosp, cosy_cosp);
     }
     
     /**

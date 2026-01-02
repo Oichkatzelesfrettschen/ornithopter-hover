@@ -110,7 +110,18 @@ jobs:
         run: |
           cd specs
           java -jar ../tools/tla2tools.jar -workers auto OrnithopterController.tla
-        continue-on-error: true
+          echo "TLA+ verification completed"
+      
+      - name: Check TLA+ results
+        run: |
+          cd specs
+          if [ -f OrnithopterController.out ]; then
+            cat OrnithopterController.out
+            if grep -q "Error" OrnithopterController.out; then
+              echo "TLA+ verification found errors!"
+              exit 1
+            fi
+          fi
       
       - name: Upload verification results
         if: always()

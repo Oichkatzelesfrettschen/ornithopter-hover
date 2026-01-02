@@ -1,6 +1,10 @@
 #include <unity.h>
 #include "../src/math/quaternion.h"
-#include <math.h>
+#include <cmath>
+
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
 
 // Helper function to compare floats with tolerance
 void assertFloatEquals(float expected, float actual, float tolerance = 0.001f) {
