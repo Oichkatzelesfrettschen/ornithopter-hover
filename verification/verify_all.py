@@ -24,7 +24,6 @@ def verify_control_bounds():
     
     # PID gains
     K_p_roll = 0.5
-    K_p_pitch = 0.5
     
     # Create solver
     s = Solver()
