@@ -58,7 +58,6 @@ def verify_control_bounds():
     s2.add(roll == 45)  # Maximum allowed roll
     result = s2.check()
     if result == sat:
-        m = s2.model()
         delta_at_max_roll = K_p_roll * 45
         print("✓ PASS: Control bounds verified")
         print(f"  Maximum roll: 45°")
